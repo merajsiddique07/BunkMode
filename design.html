@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>BunkMode - Design Your Product</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <script src="js/firebase-config.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>Upload Your Design</h1>
+
+    <input type="file" id="fileInput">
+    <button onclick="uploadToCloudinary()">Upload & Preview</button>
+
+    <div class="preview-area">
+      <h3>Preview</h3>
+      <div class="product-preview">
+        <img id="designPreview" src="" alt="Your design will appear here" />
+        <p id="quoteText" contenteditable="true" placeholder="Add a quote...">Click here to edit your quote</p>
+      </div>
+    </div>
+
+    <button onclick="addToCart()">Add to Cart</button>
+  </div>
+
+  <script>
+    let uploadedImageURL = "";
+
+    async function uploadToCloudinary() {
+      const file = document.getElementById('fileInput').files[0];
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', 'unsigned_preset'); // Replace with your unsigned preset
+      const res = await fetch('https://api.cloudinary.com/v1_1/di4vbour9/image/upload', {
+        method: 'POST',
+        body: formData
+      });
+
+      const data = await res.json();
+      uploadedImageURL = data.secure_url;
+      document.getElementById('designPreview').src = uploadedImageURL;
+    }
+
+    function addToCart() {
+      const quote = document.getElementById('quoteText').innerText;
+      const item = {
+        image: uploadedImageURL,
+        quote: quote,
+        addedAt: Date.now()
+      };
+      localStorage.setItem("bunkmode_cart", JSON.stringify(item));
+      alert("Design added to cart!");
+      window.location.href = "cart.html";
+    }
+  </script>
+
+  <style>
+    .product-preview {
+      margin-top: 1em;
+      padding: 1em;
+      background: #f0f0f0;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    #designPreview {
+      width: 200px;
+      margin-bottom: 10px;
+    }
+
+    #quoteText {
+      font-size: 16px;
+      color: #333;
+      border: 1px dashed #aaa;
+      padding: 10px;
+      border-radius: 6px;
+    }
+  </style>
+</body>
+</html>

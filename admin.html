@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>BunkMode Admin</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Admin Dashboard</h1>
+    <button onclick="clearAllOrders()" style="background:#c00;">Clear All Orders</button>
+    <div id="ordersList"></div>
+  </div>
+
+  <script>
+    // Mock orders from localStorage (in real app, store orders in Firebase)
+    const orders = JSON.parse(localStorage.getItem("bunkmode_orders")) || [];
+
+    function renderOrders() {
+      const container = document.getElementById("ordersList");
+      if (orders.length === 0) {
+        container.innerHTML = "<p>No orders yet.</p>";
+        return;
+      }
+
+      orders.forEach((order, index) => {
+        const div = document.createElement("div");
+        div.className = "product-preview";
+        div.innerHTML = `
+          <p><strong>Name:</strong> ${order.name}</p>
+          <p><strong>Email:</strong> ${order.email}</p>
+          <p><strong>Address:</strong> ${order.address}</p>
+          <p><strong>Quote:</strong> ${order.quote}</p>
+          <img src="${order.image}" width="150" />
+          <p><small><strong>Time:</strong> ${order.orderedAt}</small></p>
+          <hr>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function clearAllOrders() {
+      if (confirm("Are you sure you want to delete all orders?")) {
+        localStorage.removeItem("bunkmode_orders");
+        location.reload();
+      }
+    }
+
+    renderOrders();
+  </script>
+</body>
+</html>

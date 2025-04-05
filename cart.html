@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>BunkMode - Your Cart</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Your Design Cart</h1>
+    <div class="product-preview" id="cartItem">
+      <img id="cartImage" src="" alt="Your uploaded design" />
+      <p id="cartQuote"></p>
+      <p id="countdownText"></p>
+      <button id="placeOrderBtn" style="display:none;" onclick="goToOrder()">Place Order</button>
+    </div>
+  </div>
+
+  <script>
+    const cart = JSON.parse(localStorage.getItem("bunkmode_cart"));
+    const THREE_DAYS = 3 *1000;
+
+    if (cart) {
+      document.getElementById('cartImage').src = cart.image;
+      document.getElementById('cartQuote').innerText = cart.quote;
+
+      function updateCountdown() {
+        const now = Date.now();
+        const timeLeft = (cart.addedAt + THREE_DAYS) - now;
+
+        if (timeLeft <= 0) {
+          document.getElementById("countdownText").innerText = "You can now place your order!";
+          document.getElementById("placeOrderBtn").style.display = "inline-block";
+        } else {
+          const hours = Math.floor(timeLeft / (1000 * 60 * 60));
+          const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+          const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+          document.getElementById("countdownText").innerText =
+            `Time left to unlock order: ${hours}h ${minutes}m ${seconds}s`;
+        }
+      }
+
+      updateCountdown();
+      setInterval(updateCountdown, 1000);
+    } else {
+      document.getElementById("cartItem").innerHTML = "<p>No design in cart.</p>";
+    }
+
+    function goToOrder() {
+      window.location.href = "order.html";
+    }
+  </script>
+</body>
+</html>

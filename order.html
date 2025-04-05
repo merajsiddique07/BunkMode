@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>BunkMode - Place Your Order</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Place Your Order</h1>
+
+    <div class="product-preview">
+      <img id="orderImage" src="" alt="Your design" />
+      <p id="orderQuote"></p>
+    </div>
+
+    <form id="orderForm">
+      <input type="text" id="name" placeholder="Full Name" required />
+      <input type="email" id="email" placeholder="Email" required />
+      <input type="text" id="address" placeholder="Shipping Address" required />
+      <textarea id="notes" placeholder="Additional Notes (Optional)"></textarea>
+      <button type="submit">Submit Order</button>
+    </form>
+  </div>
+
+  <script>
+    const cart = JSON.parse(localStorage.getItem("bunkmode_cart"));
+
+    if (cart) {
+      document.getElementById("orderImage").src = cart.image;
+      document.getElementById("orderQuote").innerText = cart.quote;
+    } else {
+      document.body.innerHTML = "<h2>No design found. Please add one from the design page.</h2>";
+    }
+
+    document.getElementById("orderForm").addEventListener("submit", function (e) {
+
+      e.preventDefault();
+
+      const orderData = {
+        name: document.getElementById("name").value,
+        email: document.getElementById("email").value,
+        address: document.getElementById("address").value,
+        notes: document.getElementById("notes").value,
+        image: cart.image,
+        quote: cart.quote,
+        orderedAt: new Date().toISOString()
+      };
+
+       let allOrders = JSON.parse(localStorage.getItem("bunkmode_orders")) || [];
+allOrders.push(orderData);
+localStorage.setItem("bunkmode_orders", JSON.stringify(allOrders));
+      alert("Order placed successfully! We'll contact you soon.");
+      localStorage.removeItem("bunkmode_cart");
+      window.location.href = "index.html";
+    });
+  </script>
+</body>
+</html>
