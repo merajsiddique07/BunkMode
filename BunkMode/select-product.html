@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Select Product - BunkMode</title>
+  <style>
+    body { font-family: Arial; padding: 50px; text-align: center; }
+    .product-btn {
+      margin: 20px;
+      padding: 20px 40px;
+      background: #28a745;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Choose Product to Design</h2>
+  <button class="product-btn" onclick="select('tshirt')">T-Shirt</button>
+  <button class="product-btn" onclick="select('hoodie')">Hoodie</button>
+  <button class="product-btn" onclick="select('mug')">Mug</button>
+  <button class="product-btn" onclick="select('mousepad')">Mousepad</button>
+
+  <script>
+    function select(product) {
+      window.location.href = `customize.html?product=${product}`;
+    }
+  </script>
+</body>
+</html>
